@@ -26,6 +26,7 @@ config:
   postgresHost: "" 
   postgresDb: ""
   postgresUser: ""
+  postgresPort: ""
   postgresPassword: ""
   postgresSchedule: ""
   postgresKeepDays: 7
