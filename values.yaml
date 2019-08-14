@@ -1,0 +1,35 @@
+# Default values for backup.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: acidozik/postgres-backup
+  tag: latest
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+persistence:
+  enabled: true
+  # storageClassName: default
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+
+
+# Schedules : https://godoc.org/github.com/robfig/cron#hdr-Predefined_schedules
+config:
+  postgresHost: "" 
+  postgresDb: ""
+  postgresUser: ""
+  postgresPassword: ""
+  postgresSchedule: ""
+  postgresKeepDays: 7
+  postgresKeepWeeks: 4
+  postgresKeepMonths: 12
+  azureStorageAccount: 
+  azureStorageKey: ""
+  containerName: 

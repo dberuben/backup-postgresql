@@ -1,0 +1,56 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "backup-postgresql.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "backup-postgresql.name" . }}
+    helm.sh/chart: {{ include "backup-postgresql.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "backup-postgresql.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "backup-postgresql.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: "backups"
+          persistentVolumeClaim:
+            claimName: backup-postgresql
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: POSTGRES_HOST
+              value:  "{{ .Values.config.postgresHost}}"
+            - name: POSTGRES_DB 
+              value:  "{{ .Values.config.postgresDb}}"
+            - name: POSTGRES_USER
+              value:  "{{ .Values.config.postgresUser}}"
+            - name: POSTGRES_PASSWORD
+              value:  "{{ .Values.config.postgresPassword}}"
+            - name: SCHEDULE 
+              value:  "{{ .Values.config.postgresSchedule}}"
+            - name: BACKUP_KEEP_DAYS 
+              value:  "{{ .Values.config.postgresKeepDays}}"
+            - name: BACKUP_KEEP_WEEKS 
+              value:  "{{ .Values.config.postgresKeepWeeks}}"
+            - name: BACKUP_KEEP_MONTHS 
+              value:  "{{ .Values.config.postgresKeepMonths}}"
+            - name: AZURE_STORAGE_ACCOUNT 
+              value:  "{{ .Values.config.azureStorageAccount}}"
+            - name: AZURE_STORAGE_KEY 
+              value:  "{{ .Values.config.azureStorageKey}}"
+            - name: CONTAINER_NAME 
+              value:  "{{ .Values.config.containerName}}"
+          volumeMounts:
+            - name: backups
+              mountPath: "/backups"
+
