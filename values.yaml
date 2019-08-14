@@ -12,9 +12,10 @@ image:
 nameOverride: ""
 fullnameOverride: ""
 
+# create un PVC to avoid to use hostpath (local mount)
 persistence:
   enabled: true
-  # storageClassName: default
+  storageClassName: default
   accessModes:
     - ReadWriteOnce
   size: 10Gi
